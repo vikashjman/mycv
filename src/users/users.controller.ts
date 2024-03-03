@@ -5,6 +5,7 @@ import { UdpateUserDto } from './dtos/update-user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 
 @Controller('auth')
@@ -23,22 +24,25 @@ export class UsersController {
     }
 
     @Post('/signout')
-    signOut(@Session() session:any){
+    signOut(@Session() session: any) {
         session.userId = null;
     }
 
     @Post('/signin')
-    async signin(@Body() body: CreateUserDto, @Session() session:any) {
+    async signin(@Body() body: CreateUserDto, @Session() session: any) {
         const user = await this.authService.signin(body.email, body.password);
         session.userId = user.id;
         return user;
     }
 
+    // @Get('/whoami')
+    // WhoAmI(@Session() session:any){
+    //     return this.usersService.findOne(session.userId);
+    // }
     @Get('/whoami')
-    WhoAmI(@Session() session:any){
-        return this.usersService.findOne(session.userId);
+    whoAmI(@CurrentUser() user: string) {
+        return user;
     }
-
 
     @Get('/:id')
     async findUser(@Param('id') id: string) {
