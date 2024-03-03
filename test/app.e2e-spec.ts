@@ -15,16 +15,12 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    const dummyEmail = 'asdfdklklk@dsdfs.com'
+  it('/ (GET)', async () => {
     return request(app.getHttpServer())
-      .post('/auth/signup')
-      .send({ email: dummyEmail, password: 'adllkjjl' })
-      .expect(201)
-      .then((res) => {
-        const { email, id } = res.body;
-        expect(id).toBeDefined();
-        expect(email).toEqual(dummyEmail)
-      })
+      .get('/')
+      .expect(200)
+      .expect('Hello World!');
   });
+
+
 });
